@@ -7,38 +7,38 @@ class Singer {
     }
 }
 
-func sing() -> () -> Void {
-    let taylor = Singer()
-
-    let singing = {
-        taylor.playSong()
-        return
-    }
-    return singing
-}
-
 //func sing() -> () -> Void {
 //    let taylor = Singer()
 //
-//    let singing = { [weak taylor] in
-//        taylor?.playSong()
-//        return
-//    }
-//    return singing
-//}
-
-//func sing() -> () -> Void {
-//    let taylor = Singer()
-//
-//    let singing = { [unowned taylor] in
+//    let singing = {
 //        taylor.playSong()
 //        return
 //    }
 //    return singing
 //}
-
-let singFunction = sing()
-singFunction()
+//
+////func sing() -> () -> Void {
+////    let taylor = Singer()
+////
+////    let singing = { [weak taylor] in
+////        taylor?.playSong()
+////        return
+////    }
+////    return singing
+////}
+//
+////func sing() -> () -> Void {
+////    let taylor = Singer()
+////
+////    let singing = { [unowned taylor] in
+////        taylor.playSong()
+////        return
+////    }
+////    return singing
+////}
+//
+//let singFunction = sing()
+//singFunction()
 
 
 //func writeToLog(user: (String), message: (String)) -> () -> Void {
@@ -87,4 +87,41 @@ do {
 print("Done.")
 
 
+
+
+
+
+func sing() -> () -> Void {
+    let taylor = Singer()
+    let adele = Singer()
+    
+    let singing = { [unowned taylor, adele] in // if you want taylor to be unowned but adele to be strongly captured, that’s fine. But if you want both to be unowned you need to say so: [unowned taylor, unowned adele]
+        taylor.playSong()
+        adele.playSong()
+        return
+    }
+    return singing
+}
+
+
+
+
+
+
+var numberOfLinesLogged = 0
+
+let logger1 = {
+    numberOfLinesLogged += 1
+    print("Lines logged: \(numberOfLinesLogged)")
+}
+
+logger1()
+
+// if we take a copy of that closure, that copy shares the same capturing values as its original
+let logger2 = logger1
+
+logger2()
+logger1()
+logger2()
+// That will now print that 1, 2, 3, and 4 lines have been logged, because both logger1 and logger2 are pointing at the same captured numberOfLinesLogged value.
 
